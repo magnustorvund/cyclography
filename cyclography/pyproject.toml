@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "cyclography"
+version = "0.1.0"
+description = ""
+authors = ["Magnus Torvund <magnus.torvund@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+fastapi = "^0.115.0"
+uvicorn = "^0.30.6"
+geopy = "^2.4.1"
+black = "^24.8.0"
+ruff = "^0.6.7"
+isort = "^5.13.2"
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.ruff]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
