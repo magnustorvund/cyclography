@@ -1,6 +1,7 @@
 
 from cyclography.fetch import fetch_data
 from schemas import StationInfoResponse, StationStatusResponse  # Import the schemas
+import polars as pl
 import argparse
 import asyncio
 
@@ -43,7 +44,7 @@ async def fetch_and_combine_data():
     }
 
     # Combine data
-    combined_data = []
+    combined_records = []
     for station_info in station_info_response.data.stations:
         station_id = station_info.station_id
         availability = availability_dict.get(station_id)
@@ -61,26 +62,14 @@ async def fetch_and_combine_data():
                 "is_renting": bool(availability.is_renting),
                 "is_returning": bool(availability.is_returning),
             }
-            combined_data.append(combined_station)
+            combined_records.append(combined_station)
         else:
             print(f"Availability data not found for station ID {station_id}")
 
-    return combined_data
+    # Create a Polars DataFrame from the combined records
+    combined_df = pl.DataFrame(combined_records)
 
-def print_combined_station_data(combined_data):
-    if combined_data:
-        print("Combined Station Information and Availability:")
-        for station in combined_data:
-            print(f"Station ID: {station['station_id']}, Name: {station['name']}, "
-                  f"Address: {station['address']}, Capacity: {station['capacity']}, "
-                  f"Latitude: {station['lat']}, Longitude: {station['lon']}, "
-                  f"Bikes Available: {station['num_bikes_available']}, "
-                  f"Docks Available: {station['num_docks_available']}, "
-                  f"Is Installed: {station['is_installed']}, "
-                  f"Is Renting: {station['is_renting']}, "
-                  f"Is Returning: {station['is_returning']}")
-    else:
-        print("No combined data to display.")
+    return combined_df
 
 async def main():
     parser = argparse.ArgumentParser(description="Fetch Oslo Bysykkel station or availability data.")
@@ -107,8 +96,12 @@ async def main():
     elif args.availability:
         await fetch_availability_data()
     elif args.both:
-        combined_data = await fetch_and_combine_data()
-        print_combined_station_data(combined_data)
+        combined_df = await fetch_and_combine_data()
+        if combined_df is not None:
+            print("Combined Station Information and Availability:")
+            print(combined_df)
+        else:
+            print("Failed to fetch and combine data.")
     else:
         print("Please provide an option: --stations, --availability, or --both.")
 
