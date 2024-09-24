@@ -4,16 +4,27 @@ from typing import List, Optional
 
 class StationStatus(BaseModel):
     station_id: str
+    is_installed: int  # API returns 1 or 0
+    is_renting: int    # API returns 1 or 0
+    is_returning: int  # API returns 1 or 0
+    last_reported: int
     num_bikes_available: int
     num_docks_available: int
-    is_renting: bool
-    is_installed: bool
-    is_returning: bool
-    last_reported: int
+
+class StationStatusData(BaseModel):
+    stations: List[StationStatus]
 
 class StationStatusResponse(BaseModel):
-    data: dict
-    stations: List[StationStatus]
+    last_updated: int
+    data: StationStatusData
+
+class DockAvailabilityResponse(BaseModel):
+    station_id: str
+    num_bikes_available: int
+    num_docks_available: int
+    is_installed: bool  # We'll convert the integer to boolean
+    is_renting: bool    # We'll convert the integer to boolean
+    is_returning: bool  # We'll convert the integer to boolean
 
 class StationInfo(BaseModel):
     station_id: str
@@ -26,13 +37,6 @@ class StationInfo(BaseModel):
 class StationInfoResponse(BaseModel):
     data: dict
     stations: List[StationInfo]
-
-class DockAvailabilityResponse(BaseModel):
-    station_id: str
-    num_docks_available: int
-    is_renting: bool
-    is_installed: bool
-    is_returning: bool
 
 class ClosestStationResponse(BaseModel):
     station_id: str

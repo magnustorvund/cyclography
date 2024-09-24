@@ -1,10 +1,10 @@
 
 from cyclography.fetch import fetch_data
 import argparse
+import asyncio
 
-
-def fetch_station_data():
-    station_info = fetch_data("station_information.json")
+async def fetch_station_data():
+    station_info = await fetch_data("station_information.json")
     if station_info:
         print("Station Information:")
         for station in station_info['data']['stations']:
@@ -13,8 +13,8 @@ def fetch_station_data():
     else:
         print("Failed to fetch station information.")
 
-def fetch_availability_data():
-    station_status = fetch_data("station_status.json")
+async def fetch_availability_data():
+    station_status = await fetch_data("station_status.json")
     if station_status:
         print("Station Availability:")
         for station in station_status['data']['stations']:
@@ -24,7 +24,7 @@ def fetch_availability_data():
         print("Failed to fetch station availability.")
 
 
-def main():
+async def main():
     parser = argparse.ArgumentParser(description="Fetch Oslo Bysykkel station or availability data.")
     parser.add_argument(
         '--stations',
@@ -45,16 +45,16 @@ def main():
     args = parser.parse_args()
 
     if args.stations:
-        fetch_station_data()
+        await fetch_station_data()
     elif args.availability:
-        fetch_availability_data()
+        await fetch_availability_data()
     elif args.both:
-        fetch_station_data()
+        await fetch_station_data()
         print("\n")  # Line break
-        fetch_availability_data()
+        await fetch_availability_data()
     else:
         print("Please provide an option: --stations, --availability, or --both.")
 
 # Entry point of the script
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
