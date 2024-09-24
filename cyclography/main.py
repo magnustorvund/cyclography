@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import router  # Adjust the import based on your project structure
+from routes import router
 
 
 app = FastAPI(

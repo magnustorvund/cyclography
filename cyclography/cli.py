@@ -1,6 +1,6 @@
 
 from cyclography.fetch import fetch_data
-from schemas import StationInfoResponse, StationStatusResponse  # Import the schemas
+from schemas import StationInfoResponse, StationStatusResponse
 import polars as pl
 import argparse
 import asyncio
@@ -66,7 +66,6 @@ async def fetch_and_combine_data():
         else:
             print(f"Availability data not found for station ID {station_id}")
 
-    # Create a Polars DataFrame from the combined records
     combined_df = pl.DataFrame(combined_records)
 
     return combined_df
@@ -105,6 +104,5 @@ async def main():
     else:
         print("Please provide an option: --stations, --availability, or --both.")
 
-# Entry point of the script
 if __name__ == "__main__":
     asyncio.run(main())

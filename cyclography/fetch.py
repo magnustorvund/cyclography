@@ -19,7 +19,6 @@ async def fetch_data(endpoint: str, schema: Type[BaseModel]) -> BaseModel:
             validated_data = schema.model_validate(response.json())
             return validated_data
         except ValidationError as e:
-            # Handle validation errors
             raise HTTPException(status_code=422, detail=f"Validation error: {e}")
     else:
         raise HTTPException(
