@@ -1,11 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from geopy.distance import geodesic
+from typing import Dict
 from fetch import fetch_data
 from schemas import (
     DockAvailabilityResponse,
     StationStatusResponse,
     ClosestStationResponse,
-    StationInfoResponse
+    StationInfoResponse,
+    StationStatus
 )
 
 router = APIRouter()
@@ -22,18 +24,22 @@ async def get_dock_availability(station_id: str):
     if station_status_response is None:
         raise HTTPException(status_code=500, detail="Could not fetch station status data")
 
-    # Find the specific station
-    for station in station_status_response.data.stations:
-        print(f"Station id: {station.station_id}")
-        if station.station_id == station_id:
-            return DockAvailabilityResponse(
-                station_id=station.station_id,
-                num_bikes_available=station.num_bikes_available,
-                num_docks_available=station.num_docks_available,
-                is_installed=bool(station.is_installed),
-                is_renting=bool(station.is_renting),
-                is_returning=bool(station.is_returning)
-            )
+    # Convert the list of stations to a dictionary for O(1) access
+    station_dict: Dict[str, StationStatus] = {
+        station.station_id: station for station in station_status_response.data.stations
+    }
+
+    # Access the station directly using the station_id
+    station = station_dict.get(station_id)
+    if station:
+        return DockAvailabilityResponse(
+            station_id=station.station_id,
+            num_bikes_available=station.num_bikes_available,
+            num_docks_available=station.num_docks_available,
+            is_installed=bool(station.is_installed),
+            is_renting=bool(station.is_renting),
+            is_returning=bool(station.is_returning)
+        )
 
     raise HTTPException(status_code=404, detail="Station not found")
 
