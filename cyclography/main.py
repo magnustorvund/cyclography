@@ -4,7 +4,7 @@ from routes import router  # Adjust the import based on your project structure
 
 app = FastAPI(
     title="Cyclography",
-    description="An overview of public bikes",
+    description="An overview of public bike availability",
     version="0.1.0",
 )
 
