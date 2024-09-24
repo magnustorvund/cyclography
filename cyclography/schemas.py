@@ -4,9 +4,9 @@ from typing import List, Optional
 
 class StationStatus(BaseModel):
     station_id: str
-    is_installed: int  # API returns 1 or 0
-    is_renting: int    # API returns 1 or 0
-    is_returning: int  # API returns 1 or 0
+    is_installed: int
+    is_renting: int
+    is_returning: int
     last_reported: int
     num_bikes_available: int
     num_docks_available: int
@@ -22,9 +22,9 @@ class DockAvailabilityResponse(BaseModel):
     station_id: str
     num_bikes_available: int
     num_docks_available: int
-    is_installed: bool  # We'll convert the integer to boolean
-    is_renting: bool    # We'll convert the integer to boolean
-    is_returning: bool  # We'll convert the integer to boolean
+    is_installed: bool
+    is_renting: bool
+    is_returning: bool
 
 class StationInfo(BaseModel):
     station_id: str

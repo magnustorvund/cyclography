@@ -1,5 +1,5 @@
-from fastapi import HTTPException
 import requests
+from fastapi import HTTPException
 from pydantic import BaseModel, ValidationError
 from typing import Any, Type
 

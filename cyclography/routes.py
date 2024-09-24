@@ -19,7 +19,8 @@ async def root():
 
 @router.get("/check-dock-availability/{station_id}", response_model=DockAvailabilityResponse)
 async def get_dock_availability(station_id: str):
-    # Fetch and validate station status data
+    """Get dock availability data for a given station id."""
+
     station_status_response = await fetch_data("station_status.json", StationStatusResponse)
     if station_status_response is None:
         raise HTTPException(status_code=500, detail="Could not fetch station status data")
@@ -29,7 +30,6 @@ async def get_dock_availability(station_id: str):
         station.station_id: station for station in station_status_response.data.stations
     }
 
-    # Access the station directly using the station_id
     station = station_dict.get(station_id)
     if station:
         return DockAvailabilityResponse(
@@ -44,10 +44,10 @@ async def get_dock_availability(station_id: str):
     raise HTTPException(status_code=404, detail="Station not found")
 
 
-# Endpoint 2: Find the closest station based on latitude and longitude
 @router.get("/closest-station/", response_model=ClosestStationResponse)
 async def get_closest_station(lat: float, lon: float):
-    # Fetch and validate station information data
+    """Find the closest station based on latitude and longitude."""
+
     station_info_response = await fetch_data("station_information.json", StationInfoResponse)
     if station_info_response is None:
         raise HTTPException(status_code=500, detail="Could not fetch station information data")
