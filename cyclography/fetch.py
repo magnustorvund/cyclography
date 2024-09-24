@@ -1,7 +1,7 @@
 import requests
 from fastapi import HTTPException
 from pydantic import BaseModel, ValidationError
-from typing import Any, Type
+from typing import Type
 
 client_identifier = "magnustorvund-cyclography"
 base_url = "https://gbfs.urbansharing.com/oslobysykkel.no/"
