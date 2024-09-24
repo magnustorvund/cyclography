@@ -42,31 +42,31 @@ async def get_dock_availability(station_id: str):
 @router.get("/closest-station/", response_model=ClosestStationResponse)
 async def get_closest_station(lat: float, lon: float):
     # Fetch and validate station information data
-    station_info = await fetch_data("station_information.json", StationInfoResponse)
-    if station_info is None:
+    station_info_response = await fetch_data("station_information.json", StationInfoResponse)
+    if station_info_response is None:
         raise HTTPException(status_code=500, detail="Could not fetch station information data")
 
-    closest = None
+    closest_station = None
     min_distance = float('inf')
 
     current_location = (lat, lon)
 
-    # Find the closest station based on geolocation
-    for station in station_info['data']['stations']:
-        station_location = (station['lat'], station['lon'])
+    # Access stations correctly
+    for station in station_info_response.data.stations:
+        station_location = (station.lat, station.lon)
         distance = geodesic(current_location, station_location).meters  # Calculate distance in meters
 
         if distance < min_distance:
             min_distance = distance
-            closest = station
+            closest_station = station
 
-    if closest:
+    if closest_station:
         return ClosestStationResponse(
-            station_id=closest['station_id'],
-            name=closest['name'],
-            address=closest['address'],
-            lat=closest['lat'],
-            lon=closest['lon'],
+            station_id=closest_station.station_id,
+            name=closest_station.name,
+            address=closest_station.address,
+            lat=closest_station.lat,
+            lon=closest_station.lon,
             distance_in_meters=min_distance
         )
 

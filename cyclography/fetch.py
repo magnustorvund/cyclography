@@ -16,8 +16,7 @@ async def fetch_data(endpoint: str, schema: Type[BaseModel]) -> BaseModel:
 
     if response.status_code == 200:
         try:
-            # Validate the response using the Pydantic schema
-            validated_data = schema(**response.json())
+            validated_data = schema.model_validate(response.json())
             return validated_data
         except ValidationError as e:
             # Handle validation errors

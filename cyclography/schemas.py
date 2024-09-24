@@ -34,9 +34,12 @@ class StationInfo(BaseModel):
     lon: float
     capacity: int
 
-class StationInfoResponse(BaseModel):
-    data: dict
+class StationInfoData(BaseModel):
     stations: List[StationInfo]
+
+class StationInfoResponse(BaseModel):
+    last_updated: int
+    data: StationInfoData
 
 class ClosestStationResponse(BaseModel):
     station_id: str
